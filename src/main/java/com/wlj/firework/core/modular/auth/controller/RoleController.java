@@ -39,7 +39,8 @@ public class RoleController {
 
     @ApiOperation(value = "修改角色信息")
     @PostMapping("/edit")
-    public HttpResult<Void> edit(@RequestBody @Validated RoleRequest request) {
+    public HttpResult<Void> edit(@RequestBody @Validated(RoleRequest.Edit.class)
+                                         RoleRequest request) {
         roleService.edit(request);
         return HttpResult.success();
     }

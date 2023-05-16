@@ -36,7 +36,8 @@ public class MenuController {
 
     @ApiOperation(value = "编辑菜单")
     @PostMapping("/edit")
-    public HttpResult<Void> edit(@RequestBody @Validated MenuRequest request) {
+    public HttpResult<Void> edit(@RequestBody @Validated(MenuRequest.Edit.class)
+                                         MenuRequest request) {
         menuService.edit(request);
         return HttpResult.success();
     }

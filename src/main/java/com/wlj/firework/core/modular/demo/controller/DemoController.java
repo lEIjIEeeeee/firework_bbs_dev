@@ -35,7 +35,8 @@ public class DemoController {
 
     @ApiOperation(value = "修改测试数据")
     @PostMapping("/edit")
-    public HttpResult<Void> edit(@RequestBody @Validated DemoRequest request) {
+    public HttpResult<Void> edit(@RequestBody @Validated(DemoRequest.Edit.class)
+                                         DemoRequest request) {
         demoService.edit(request);
         return HttpResult.success();
     }
