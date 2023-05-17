@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "测试模块-测试接口")
+@Api(tags = "Demo模块-Demo接口")
 @Validated
 @Slf4j
 @AllArgsConstructor
@@ -26,14 +26,14 @@ public class DemoController {
 
     private final DemoService demoService;
 
-    @ApiOperation(value = "添加测试数据")
+    @ApiOperation(value = "新增Demo接口")
     @PostMapping("/add")
     public HttpResult<Void> add(@RequestBody @Validated DemoRequest request) {
         demoService.add(request);
         return HttpResult.success();
     }
 
-    @ApiOperation(value = "修改测试数据")
+    @ApiOperation(value = "修改Demo接口")
     @PostMapping("/edit")
     public HttpResult<Void> edit(@RequestBody @Validated(DemoRequest.Edit.class)
                                          DemoRequest request) {
@@ -41,20 +41,20 @@ public class DemoController {
         return HttpResult.success();
     }
 
-    @ApiOperation(value = "删除测试数据")
+    @ApiOperation(value = "删除Demo接口")
     @PostMapping("/delete")
     public HttpResult<Void> delete(@RequestBody @Validated DemoDeleteRequest request) {
         demoService.delete(request);
         return HttpResult.success();
     }
 
-    @ApiOperation(value = "查询信息详情测试接口")
+    @ApiOperation(value = "查询Demo详情接口")
     @GetMapping("/get")
     public HttpResult<DemoResponse> get(@RequestParam String id) {
         return HttpResult.success(JavaBeanUtils.map(demoService.get(id), DemoResponse.class));
     }
 
-    @ApiOperation(value = "分页查询")
+    @ApiOperation(value = "分页查询Demo列表接口")
     @GetMapping("/listPage")
     public HttpResult<PageVO<DemoResponse>> listPage(@Validated(BaseQueryRequest.ListPage.class)
                                                              BaseQueryRequest request) {
