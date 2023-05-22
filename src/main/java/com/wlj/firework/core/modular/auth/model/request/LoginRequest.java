@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 @Builder
@@ -16,6 +17,7 @@ public class LoginRequest {
 
     @ApiModelProperty(value = "用户账号")
     @NotBlank(message = "账号不能为空")
+    @Pattern(regexp = "^1[3-9]\\d{9}$")
     private String account;
 
     @ApiModelProperty(value = "密码")

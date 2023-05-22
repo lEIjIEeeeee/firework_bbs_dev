@@ -50,8 +50,8 @@ public class CheckTokenFilter extends OncePerRequestFilter {
         //放行url、资源
         if (checkIsExcludedUrl(request.getRequestURI())
                 || request.getRequestURI().contains("/webjars")
-                || request.getRequestURI().contains("/swagger-resource")
-                || request.getRequestURI().contains("v2")
+                || request.getRequestURI().contains("/swagger-resources")
+                || request.getRequestURI().contains("/v2")
                 || request.getRequestURI().contains("/druid")) {
             ContextUtils.clear();
             chain.doFilter(request, response);
@@ -74,7 +74,7 @@ public class CheckTokenFilter extends OncePerRequestFilter {
         if (jwtPayLoad != null) {
             LoginUser loginUser = redisUtils.getObjWithClass(AuthConstants.SESSION_PREFIX + jwtPayLoad.getUserId(), LoginUser.class);
             if (loginUser == null) {
-                validatedTokenError(response);
+                validatedTokenExpired(response);
                 return;
             }
 
@@ -106,6 +106,26 @@ public class CheckTokenFilter extends OncePerRequestFilter {
         return authToken;
     }
 
+    private void validatedTokenError(ServletResponse response) {
+        try (PrintWriter out = response.getWriter()) {
+            HttpResult<Void> failure = HttpResult.failure(HttpResultCode.TOKEN_VALIDATE_FAILED);
+            out.write(JSON.toJSONString(failure));
+            out.flush();
+        } catch (IOException e) {
+            log.error("token校验异常！");
+        }
+    }
+
+    private void validatedTokenExpired(ServletResponse response) {
+        try (PrintWriter out = response.getWriter()) {
+            HttpResult<Void> failure = HttpResult.failure(HttpResultCode.TOKEN_EXPIRED);
+            out.write(JSON.toJSONString(failure));
+            out.flush();
+        } catch (IOException e) {
+            log.error("token已过期！");
+        }
+    }
+
     private void setContextInfo(HttpServletRequest request, LoginUser loginUser) {
         checkLoginUserInfo(loginUser);
         ContextUtils.setContext(Context.builder()
@@ -125,17 +145,6 @@ public class CheckTokenFilter extends OncePerRequestFilter {
 
         if (StrUtil.isBlank(loginUser.getAccount())) {
             throw new BizException(HttpResultCode.BIZ_EXCEPTION, "登录用户没有账号信息！");
-        }
-    }
-
-    private void validatedTokenError(ServletResponse response) {
-        try (PrintWriter out = response.getWriter()) {
-            HttpResult<Void> failure = HttpResult.failure(HttpResultCode.TOKEN_VALIDATE_FAILED);
-            out.write(JSON.toJSONString(failure));
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.error("token校验异常！");
         }
     }
 

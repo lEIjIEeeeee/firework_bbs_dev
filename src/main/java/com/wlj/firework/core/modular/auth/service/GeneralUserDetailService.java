@@ -1,4 +1,4 @@
-package com.wlj.firework.core.modular.common.service;
+package com.wlj.firework.core.modular.auth.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

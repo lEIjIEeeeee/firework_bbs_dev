@@ -13,6 +13,7 @@ public enum HttpResultCode {
 
     PARAM_VALIDATE_FAILED(1000, "参数校验失败"),
     TOKEN_VALIDATE_FAILED(1001, "Token校验失败"),
+    TOKEN_EXPIRED(1004, "Token已过期"),
 
     USER_PASSWORD_VALIDATE_FAILED(2000, "账号密码校验失败"),
     USER_ACCOUNT_NOT_EXIST(2002, "用户账号不存在"),

@@ -1,6 +1,5 @@
 package com.wlj.firework.core.security.jwt;
 
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -46,7 +45,8 @@ public class JwtTokenUtils {
             return Jwts.builder()
                        .setSubject(userId)
                        .setIssuedAt(createDate)
-                       .setExpiration(expiredDate).signWith(SignatureAlgorithm.HS512, secret)
+                       .setExpiration(expiredDate)
+                       .signWith(SignatureAlgorithm.HS512, secret)
                        .compact();
         } else {
             return Jwts.builder()

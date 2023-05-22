@@ -1,7 +1,7 @@
 package com.wlj.firework.core.config;
 
 import com.wlj.firework.core.filter.CheckTokenFilter;
-import com.wlj.firework.core.modular.common.service.GeneralUserDetailService;
+import com.wlj.firework.core.modular.auth.service.GeneralUserDetailService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

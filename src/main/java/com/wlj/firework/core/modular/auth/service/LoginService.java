@@ -20,6 +20,7 @@ import com.wlj.firework.core.modular.auth.model.request.RegisterRequest;
 import com.wlj.firework.core.modular.common.constant.NumberConstants;
 import com.wlj.firework.core.modular.common.constant.RedisKeyConstants;
 import com.wlj.firework.core.modular.common.constant.SystemConstants;
+import com.wlj.firework.core.modular.common.enums.EnableOrDisableStatusEnum;
 import com.wlj.firework.core.modular.common.enums.HttpResultCode;
 import com.wlj.firework.core.modular.common.enums.UserStatusEnum;
 import com.wlj.firework.core.modular.common.enums.YesOrNoEnum;
@@ -247,8 +248,9 @@ public class LoginService {
                                              .map(RoleMenuRel::getMenuId)
                                              .collect(Collectors.toSet());
         List<Menu> menuList = menuMapper.selectList(Wrappers.lambdaQuery(Menu.class)
-                                                            .eq(Menu::getMenuFlag, YesOrNoEnum.Y.getCode())
-                                                            .in(Menu::getId, menuIds));
+                                                            .in(Menu::getId, menuIds)
+                                                            .eq(Menu::getStatus, EnableOrDisableStatusEnum.ENABLE.getCode())
+                                                            .eq(Menu::getMenuFlag, YesOrNoEnum.Y.getCode()));
         if (CollUtil.isEmpty(menuList)) {
             return;
         }
