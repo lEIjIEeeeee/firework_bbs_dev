@@ -19,7 +19,7 @@ public class DemoManager {
     }
 
     public Demo getByIdWithException(String id) {
-        Demo demo = demoMapper.selectById(id);
+        Demo demo = getById(id);
         if (ObjectUtil.isNull(demo)) {
             throw new BizException(HttpResultCode.DATA_NOT_EXISTS);
         }

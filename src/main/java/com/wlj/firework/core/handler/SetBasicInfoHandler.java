@@ -17,7 +17,7 @@ import java.util.Date;
 
 @Slf4j
 @Component
-public class FillBaseFieldHandler implements MetaObjectHandler {
+public class SetBasicInfoHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {

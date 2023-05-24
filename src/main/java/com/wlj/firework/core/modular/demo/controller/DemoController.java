@@ -8,7 +8,7 @@ import com.wlj.firework.core.modular.demo.model.request.DemoDeleteRequest;
 import com.wlj.firework.core.modular.demo.model.request.DemoRequest;
 import com.wlj.firework.core.modular.demo.model.response.DemoResponse;
 import com.wlj.firework.core.modular.demo.service.DemoService;
-import com.wlj.firework.core.util.JavaBeanUtils;
+import com.wlj.firework.core.modular.common.util.JavaBeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;

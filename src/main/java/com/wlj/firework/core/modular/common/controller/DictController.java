@@ -7,7 +7,7 @@ import com.wlj.firework.core.modular.common.model.request.*;
 import com.wlj.firework.core.modular.common.model.response.DictResponse;
 import com.wlj.firework.core.modular.common.model.response.DictTypeResponse;
 import com.wlj.firework.core.modular.common.service.DictService;
-import com.wlj.firework.core.util.JavaBeanUtils;
+import com.wlj.firework.core.modular.common.util.JavaBeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;

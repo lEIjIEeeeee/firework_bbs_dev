@@ -7,13 +7,14 @@ import com.wlj.firework.core.config.WebSecurityConfig;
 import com.wlj.firework.core.context.Context;
 import com.wlj.firework.core.context.ContextUtils;
 import com.wlj.firework.core.modular.auth.constant.AuthConstants;
+import com.wlj.firework.core.modular.common.constant.RedisKeyConstants;
 import com.wlj.firework.core.modular.common.enums.HttpResultCode;
 import com.wlj.firework.core.modular.common.exception.BizException;
 import com.wlj.firework.core.modular.common.model.HttpResult;
 import com.wlj.firework.core.modular.common.model.dto.LoginUser;
 import com.wlj.firework.core.security.jwt.JwtPayLoad;
 import com.wlj.firework.core.security.jwt.JwtTokenUtils;
-import com.wlj.firework.core.util.JedisUtils;
+import com.wlj.firework.core.modular.common.util.JedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,7 +73,7 @@ public class CheckTokenFilter extends OncePerRequestFilter {
 
         //验证通过，设置上下文
         if (jwtPayLoad != null) {
-            LoginUser loginUser = redisUtils.getObjWithClass(AuthConstants.SESSION_PREFIX + jwtPayLoad.getUserId(), LoginUser.class);
+            LoginUser loginUser = redisUtils.getObjWithClass(RedisKeyConstants.SESSION_PREFIX + jwtPayLoad.getUserId(), LoginUser.class);
             if (loginUser == null) {
                 validatedTokenExpired(response);
                 return;

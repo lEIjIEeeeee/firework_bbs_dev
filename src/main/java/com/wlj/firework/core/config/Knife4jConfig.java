@@ -25,19 +25,21 @@ public class Knife4jConfig {
 
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
-                                                      .ignoredParameterTypes(HttpSession.class, HttpServletRequest.class)
-                                                      .enable(swaggerEnable)
-                                                      .select()
-                                                      .apis(RequestHandlerSelectors.basePackage("com.wlj.firework.core"))
-                                                      .paths(PathSelectors.any())
-                                                      .build();
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .ignoredParameterTypes(HttpSession.class, HttpServletRequest.class)
+                .enable(swaggerEnable)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.wlj.firework.core"))
+                .paths(PathSelectors.any())
+                .build();
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("测试平台-平台管理API文档")
-                                   .description("平台管理服务api")
-                                   .version("1.0")
-                                   .build();
+        return new ApiInfoBuilder()
+                .title("测试平台-平台管理API文档")
+                .description("平台管理服务api")
+                .version("1.0")
+                .build();
     }
 }

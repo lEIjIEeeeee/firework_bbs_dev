@@ -15,12 +15,12 @@ public class MenuManager {
 
     private final MenuMapper menuMapper;
 
-    public Menu getMenuById(String id) {
+    public Menu getById(String id) {
         return menuMapper.selectById(id);
     }
 
-    public Menu getMenuByIdWithException(String id) {
-        Menu menu = menuMapper.selectById(id);
+    public Menu getByIdWithException(String id) {
+        Menu menu = getById(id);
         if (ObjectUtil.isNull(menu)) {
             throw new BizException(HttpResultCode.DATA_NOT_EXISTS);
         }

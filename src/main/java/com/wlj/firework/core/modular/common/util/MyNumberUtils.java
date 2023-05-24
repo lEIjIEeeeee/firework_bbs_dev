@@ -1,4 +1,4 @@
-package com.wlj.firework.core.util;
+package com.wlj.firework.core.modular.common.util;
 
 public class MyNumberUtils {
 

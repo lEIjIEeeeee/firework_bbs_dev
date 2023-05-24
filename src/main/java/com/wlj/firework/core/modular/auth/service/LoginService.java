@@ -12,8 +12,8 @@ import com.wlj.firework.core.context.HttpContext;
 import com.wlj.firework.core.modular.auth.constant.AuthConstants;
 import com.wlj.firework.core.modular.auth.dao.*;
 import com.wlj.firework.core.modular.auth.enums.RegisterTypeEnum;
-import com.wlj.firework.core.modular.auth.manager.MemberManager;
-import com.wlj.firework.core.modular.auth.manager.UserManager;
+import com.wlj.firework.core.modular.user.manager.MemberManager;
+import com.wlj.firework.core.modular.user.manager.UserManager;
 import com.wlj.firework.core.modular.auth.model.entity.*;
 import com.wlj.firework.core.modular.auth.model.request.LoginRequest;
 import com.wlj.firework.core.modular.auth.model.request.RegisterRequest;
@@ -22,14 +22,19 @@ import com.wlj.firework.core.modular.common.constant.RedisKeyConstants;
 import com.wlj.firework.core.modular.common.constant.SystemConstants;
 import com.wlj.firework.core.modular.common.enums.EnableOrDisableStatusEnum;
 import com.wlj.firework.core.modular.common.enums.HttpResultCode;
-import com.wlj.firework.core.modular.common.enums.UserStatusEnum;
+import com.wlj.firework.core.modular.user.enums.UserStatusEnum;
 import com.wlj.firework.core.modular.common.enums.YesOrNoEnum;
 import com.wlj.firework.core.modular.common.exception.BizException;
 import com.wlj.firework.core.modular.common.model.dto.LoginUser;
+import com.wlj.firework.core.modular.user.dao.MemberMapper;
+import com.wlj.firework.core.modular.user.dao.UserMapper;
+import com.wlj.firework.core.modular.user.model.entity.Member;
+import com.wlj.firework.core.modular.auth.model.entity.Menu;
+import com.wlj.firework.core.modular.user.model.entity.User;
 import com.wlj.firework.core.security.jwt.JwtPayLoad;
 import com.wlj.firework.core.security.jwt.JwtTokenUtils;
-import com.wlj.firework.core.util.JavaBeanUtils;
-import com.wlj.firework.core.util.JedisUtils;
+import com.wlj.firework.core.modular.common.util.JavaBeanUtils;
+import com.wlj.firework.core.modular.common.util.JedisUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -39,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -148,11 +154,15 @@ public class LoginService {
             throw new BizException(HttpResultCode.USER_PASSWORD_VALIDATE_FAILED);
         }
 
-        updateLastLoginTime(user.getId());
-
         LoginUser loginUser = JavaBeanUtils.map(user, LoginUser.class);
 
         fillLoginUserInfo(loginUser);
+
+        setUserSession(loginUser);
+
+        addLoginCookie(loginUser.getAuthToken());
+
+        updateLastLoginTime(user.getId());
         return loginUser;
     }
 
@@ -170,8 +180,11 @@ public class LoginService {
     }
 
     private void updateLastLoginTime(String userId) {
+        final Date updateTime = DateUtil.date();
         memberMapper.update(null, Wrappers.lambdaUpdate(Member.class)
-                                          .set(Member::getLastLoginTime, DateUtil.date())
+                                          .set(Member::getLastLoginTime, updateTime)
+                                          .set(Member::getUpdateId, userId)
+                                          .set(Member::getUpdateTime, updateTime)
                                           .eq(Member::getId, userId));
     }
 
@@ -186,20 +199,17 @@ public class LoginService {
     }
 
     private void fillLoginUserInfo(LoginUser loginUser) {
-        Member member = memberManager.getMemberByIdWithException(loginUser.getId());
-        loginUser.setNickName(member.getNickName());
-        if (StrUtil.isNotBlank(member.getRealName())) {
-            loginUser.setRealName(member.getRealName());
-        }
+        Member member = memberManager.getByIdWithException(loginUser.getId());
+        JavaBeanUtils.map(member, loginUser);
 
         //根据roleId填充角色集合
-        fillLoginUserRoles(loginUser);
+        fillUserRolesInfo(loginUser);
 
         //填充功能权限信息
-        fillPermissions(loginUser);
+        fillPermissionsInfo(loginUser);
 
         String token;
-        LoginUser redisUser = redisUtils.getObjWithClass(AuthConstants.SESSION_PREFIX + loginUser.getId(), LoginUser.class);
+        LoginUser redisUser = redisUtils.getObjWithClass(RedisKeyConstants.SESSION_PREFIX + loginUser.getId(), LoginUser.class);
         if (ObjectUtil.isNotNull(redisUser)) {
             token = redisUser.getAuthToken();
             if (JwtTokenUtils.isTokenExpired(token)) {
@@ -209,15 +219,9 @@ public class LoginService {
             token = generateUserToken(loginUser);
         }
         loginUser.setAuthToken(token);
-
-        //存储loginUser信息到redis，时限默认一年
-        setUserSession(loginUser);
-
-        //保存token到Cookie
-        saveLoginTokenToCookie(token);
     }
 
-    private void fillLoginUserRoles(LoginUser loginUser) {
+    private void fillUserRolesInfo(LoginUser loginUser) {
         if (StrUtil.isBlank(loginUser.getRoleId())) {
             return;
         }
@@ -225,8 +229,7 @@ public class LoginService {
         if (CollUtil.isNotEmpty(roleIds)) {
             loginUser.setRoleIds(roleIds);
         }
-        List<Role> roleList = roleMapper.selectList(Wrappers.lambdaQuery(Role.class)
-                                                            .in(Role::getId, roleIds));
+        List<Role> roleList = roleMapper.selectBatchIds(roleIds);
         if (CollUtil.isEmpty(roleList)) {
             return;
         }
@@ -235,7 +238,7 @@ public class LoginService {
                                        .collect(Collectors.toSet()));
     }
 
-    private void fillPermissions(LoginUser loginUser) {
+    private void fillPermissionsInfo(LoginUser loginUser) {
         if (CollUtil.isEmpty(loginUser.getRoleIds())) {
             return;
         }
@@ -260,10 +263,13 @@ public class LoginService {
     }
 
     private void setUserSession(LoginUser loginUser) {
-        redisUtils.setObjWithDay(AuthConstants.SESSION_PREFIX + loginUser.getId(), loginUser, 365);
+        redisUtils.setObjWithDay(RedisKeyConstants.SESSION_PREFIX + loginUser.getId(), loginUser, 365);
     }
 
-    private void saveLoginTokenToCookie(String token) {
+    private void addLoginCookie(String token) {
+        if (StrUtil.isBlank(token)) {
+            throw new BizException(HttpResultCode.BIZ_EXCEPTION, "token生成异常！");
+        }
         HttpServletResponse response = HttpContext.getResponse();
         if (response != null) {
             Cookie cookie = new Cookie(AuthConstants.TOKEN_NAME, token);

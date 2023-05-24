@@ -39,8 +39,10 @@ public class ControllerExceptionHandler {
             for (FieldError fieldError : errorList) {
                 errorMsg.append(fieldError.getField())
                         .append("：")
-                        .append(fieldError.getDefaultMessage())
-                        .append("，");
+                        .append(fieldError.getDefaultMessage());
+                if (errorList.indexOf(fieldError) == errorList.size() - 1) {
+                    errorMsg.append("，");
+                }
             }
             return HttpResult.failure(HttpResultCode.PARAM_VALIDATE_FAILED, String.valueOf(errorMsg));
         } else {

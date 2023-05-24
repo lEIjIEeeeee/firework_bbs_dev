@@ -7,7 +7,7 @@ import com.wlj.firework.core.modular.auth.model.request.MenuRequest;
 import com.wlj.firework.core.modular.auth.model.response.MenuDetailResponse;
 import com.wlj.firework.core.modular.auth.service.MenuService;
 import com.wlj.firework.core.modular.common.model.HttpResult;
-import com.wlj.firework.core.util.JavaBeanUtils;
+import com.wlj.firework.core.modular.common.util.JavaBeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;

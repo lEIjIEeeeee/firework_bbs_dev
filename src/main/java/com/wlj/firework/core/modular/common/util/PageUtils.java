@@ -1,4 +1,4 @@
-package com.wlj.firework.core.util;
+package com.wlj.firework.core.modular.common.util;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wlj.firework.core.modular.common.model.request.BaseQueryRequest;

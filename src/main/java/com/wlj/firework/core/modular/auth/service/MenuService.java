@@ -16,7 +16,7 @@ import com.wlj.firework.core.modular.auth.model.request.MenuQueryRequest;
 import com.wlj.firework.core.modular.auth.model.request.MenuRequest;
 import com.wlj.firework.core.modular.common.enums.HttpResultCode;
 import com.wlj.firework.core.modular.common.exception.BizException;
-import com.wlj.firework.core.util.JavaBeanUtils;
+import com.wlj.firework.core.modular.common.util.JavaBeanUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,7 +65,7 @@ public class MenuService {
             menu.setPids(StrUtil.BRACKET_START + Menu.TREE_ROOT_ID + StrUtil.BRACKET_END);
             menu.setLevels(1);
         } else {
-            Menu pMenu = menuManager.getMenuByIdWithException(menu.getPid());
+            Menu pMenu = menuManager.getByIdWithException(menu.getPid());
             menu.setPids(pMenu.getPids() + StrUtil.COMMA + StrUtil.BRACKET_START + pMenu.getId() + StrUtil.BRACKET_END);
             menu.setLevels(pMenu.getLevels() + 1);
         }
@@ -73,7 +73,7 @@ public class MenuService {
 
     @Transactional(rollbackFor = Exception.class)
     public void delete(MenuDeleteRequest request) {
-        Menu menu = menuManager.getMenuByIdWithException(request.getId());
+        Menu menu = menuManager.getByIdWithException(request.getId());
         menuMapper.deleteById(menu.getId());
     }
 
@@ -119,7 +119,7 @@ public class MenuService {
     }
 
     public Menu get(String id) {
-        return menuManager.getMenuByIdWithException(id);
+        return menuManager.getByIdWithException(id);
     }
 
 }

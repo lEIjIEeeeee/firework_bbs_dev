@@ -1,6 +1,6 @@
-package com.wlj.firework.core.modular.auth.dao;
+package com.wlj.firework.core.modular.user.dao;
 
-import com.wlj.firework.core.modular.auth.model.entity.User;
+import com.wlj.firework.core.modular.user.model.entity.User;
 import com.wlj.firework.core.modular.common.dao.MyBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

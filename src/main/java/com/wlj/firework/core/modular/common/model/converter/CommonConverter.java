@@ -3,7 +3,7 @@ package com.wlj.firework.core.modular.common.model.converter;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wlj.firework.core.modular.common.model.PageVO;
-import com.wlj.firework.core.util.JavaBeanUtils;
+import com.wlj.firework.core.modular.common.util.JavaBeanUtils;
 
 /**
  * @author wlj

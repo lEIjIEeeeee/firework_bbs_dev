@@ -1,4 +1,4 @@
-package com.wlj.firework.core.modular.common.enums;
+package com.wlj.firework.core.modular.user.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

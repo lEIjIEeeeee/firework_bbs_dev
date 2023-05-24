@@ -52,9 +52,6 @@ public class MybatisPlusConfig {
         }
     }
 
-    /**
-     * UPDATE %s %s %s %s
-     */
     private class LogicBatchDeleteWithFill extends AbstractMethod {
 
         private final static String MAPPER_METHOD = "deleteBatchWithFill";
@@ -86,5 +83,4 @@ public class MybatisPlusConfig {
             }
         }
     }
-
 }

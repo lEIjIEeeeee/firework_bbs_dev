@@ -1,4 +1,4 @@
-package com.wlj.firework.core.modular.auth.model.entity;
+package com.wlj.firework.core.modular.user.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

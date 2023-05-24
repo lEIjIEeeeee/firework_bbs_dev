@@ -10,7 +10,7 @@ import com.wlj.firework.core.modular.auth.model.request.RoleRequest;
 import com.wlj.firework.core.modular.auth.model.response.RoleDetailResponse;
 import com.wlj.firework.core.modular.auth.model.response.RoleListResponse;
 import com.wlj.firework.core.modular.auth.service.RoleService;
-import com.wlj.firework.core.util.JavaBeanUtils;
+import com.wlj.firework.core.modular.common.util.JavaBeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;

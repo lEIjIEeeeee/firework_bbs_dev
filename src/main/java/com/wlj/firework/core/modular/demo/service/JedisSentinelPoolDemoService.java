@@ -1,7 +1,7 @@
 package com.wlj.firework.core.modular.demo.service;
 
 import com.wlj.firework.core.modular.demo.model.request.SetKeyRequest;
-import com.wlj.firework.core.util.JedisUtils;
+import com.wlj.firework.core.modular.common.util.JedisUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

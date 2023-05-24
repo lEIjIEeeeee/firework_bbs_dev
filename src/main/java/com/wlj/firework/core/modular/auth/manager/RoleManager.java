@@ -20,7 +20,7 @@ public class RoleManager {
     }
 
     public Role getByIdWithException(String id) {
-        Role role = roleMapper.selectById(id);
+        Role role = getById(id);
         if (ObjectUtil.isNull(role)) {
             throw new BizException(HttpResultCode.DATA_NOT_EXISTS, "角色信息不存在");
         }

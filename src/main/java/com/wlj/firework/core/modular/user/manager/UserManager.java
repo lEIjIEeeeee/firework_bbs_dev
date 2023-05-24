@@ -1,9 +1,9 @@
-package com.wlj.firework.core.modular.auth.manager;
+package com.wlj.firework.core.modular.user.manager;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.wlj.firework.core.modular.auth.dao.UserMapper;
-import com.wlj.firework.core.modular.auth.model.entity.User;
+import com.wlj.firework.core.modular.user.dao.UserMapper;
+import com.wlj.firework.core.modular.user.model.entity.User;
 import com.wlj.firework.core.modular.common.enums.HttpResultCode;
 import com.wlj.firework.core.modular.common.exception.BizException;
 import lombok.AllArgsConstructor;
@@ -19,8 +19,8 @@ public class UserManager {
         return userMapper.selectById(id);
     }
 
-    public User getUserByIdWithException(String id) {
-        User user = userMapper.selectById(id);
+    public User getByIdWithException(String id) {
+        User user = getUserById(id);
         if (ObjectUtil.isNull(user)) {
             throw new BizException(HttpResultCode.DATA_NOT_EXISTS);
         }

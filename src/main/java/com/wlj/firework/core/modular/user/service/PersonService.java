@@ -4,14 +4,14 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.wlj.firework.core.context.ContextUtils;
-import com.wlj.firework.core.modular.auth.dao.MemberMapper;
-import com.wlj.firework.core.modular.auth.dao.UserMapper;
-import com.wlj.firework.core.modular.auth.manager.MemberManager;
-import com.wlj.firework.core.modular.auth.manager.UserManager;
-import com.wlj.firework.core.modular.auth.model.entity.Member;
-import com.wlj.firework.core.modular.auth.model.entity.User;
+import com.wlj.firework.core.modular.user.dao.MemberMapper;
+import com.wlj.firework.core.modular.user.dao.UserMapper;
+import com.wlj.firework.core.modular.user.manager.MemberManager;
+import com.wlj.firework.core.modular.user.manager.UserManager;
+import com.wlj.firework.core.modular.user.model.entity.Member;
+import com.wlj.firework.core.modular.user.model.entity.User;
 import com.wlj.firework.core.modular.user.request.PersonInfoEditRequest;
-import com.wlj.firework.core.util.JavaBeanUtils;
+import com.wlj.firework.core.modular.common.util.JavaBeanUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class PersonService {
     @Transactional(rollbackFor = Exception.class)
     public void editPersonInfo(PersonInfoEditRequest request) {
         String userId = ContextUtils.getCurrentUserId();
-        User user = userManager.getUserByIdWithException(request.getUserId());
+        User user = userManager.getByIdWithException(request.getUserId());
         JavaBeanUtils.map(request, user);
         if (StrUtil.isNotBlank(request.getNickName())) {
             user.setName(request.getNickName());
@@ -43,7 +43,7 @@ public class PersonService {
             .setUpdateTime(DateUtil.date());
         userMapper.updateById(user);
 
-        Member member = memberManager.getMemberByIdWithException(request.getUserId());
+        Member member = memberManager.getByIdWithException(request.getUserId());
         JavaBeanUtils.map(request, member);
         if (ObjectUtil.isNotNull(request.getGender())) {
             member.setGender(request.getGender().getCode());

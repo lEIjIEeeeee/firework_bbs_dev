@@ -1,4 +1,4 @@
-package com.wlj.firework.core.util;
+package com.wlj.firework.core.modular.common.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
